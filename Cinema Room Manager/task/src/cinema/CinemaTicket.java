@@ -1,6 +1,6 @@
 package cinema;
 
-import static cinema.Cinema.cinemaSpecs;
+import static cinema.Cinema.*;
 
 public class CinemaTicket {
     int rowNumberTicket;
@@ -20,4 +20,6 @@ public class CinemaTicket {
         }
 
     }
+
+
 }

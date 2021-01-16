@@ -336,6 +336,61 @@ files:
         }
     }
   learner_created: false
+- name: src/cinema/CinemaTicket.java
+  visible: true
+  text: |
+    package cinema;
+
+    import static cinema.Cinema.cinemaSpecs;
+
+    public class CinemaTicket {
+        int rowNumberTicket;
+        int colNumberTicket;
+        int costTicket;
+
+
+        public CinemaTicket(int rowNumberTicket, int colNumberTicket) {
+
+            this.rowNumberTicket = rowNumberTicket;
+            this.colNumberTicket = colNumberTicket;
+            if (this.rowNumberTicket < (cinemaSpecs.numRowsTotal + 1 ) / 2 ||
+                    cinemaSpecs.numRowsTotal * cinemaSpecs.numColsTotal < 60) {
+                this.costTicket = cinemaSpecs.ticketCostFront;
+            } else {
+                this.costTicket = cinemaSpecs.ticketCostBack;
+            }
+
+        }
+    }
+  learner_created: true
+- name: src/cinema/CinemaSpecs.java
+  visible: true
+  text: |+
+    package cinema;
+
+    public class CinemaSpecs {
+        int numRowsTotal;
+        int numColsTotal;
+        int ticketCostFront;
+        int ticketCostBack;
+        int smallCinemaLimit;
+
+        public CinemaSpecs(int numRowsTotal, int numColsTotal, int ticketCostFront, int ticketCostBack, int smallCinemaLimit) {
+
+            this.numRowsTotal = numRowsTotal;
+            this.numColsTotal = numColsTotal;
+            this.ticketCostFront = ticketCostFront;
+            this.ticketCostBack = ticketCostBack;
+            this.smallCinemaLimit = smallCinemaLimit;
+        }
+    }
+
+
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/133/stages/712/implement
-status: Unchecked
-record: -1
+status: Solved
+feedback:
+  message: Congratulations! Continue on <a href="https://hyperskill.org/projects/133/stages/712/implement">JetBrains
+    Academy</a>
+  time: Sat, 16 Jan 2021 03:41:32 UTC
+record: 4

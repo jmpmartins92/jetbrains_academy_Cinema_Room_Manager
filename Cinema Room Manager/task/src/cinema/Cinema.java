@@ -7,6 +7,8 @@ public class Cinema {
     static CinemaSpecs cinemaSpecs;
     static CinemaTicket cinemaTicket;
     static String[][] seats;
+    static int purchasedTickets;
+    static int incomeCurrent;
 
     public static String[][] cinemaRoom() {
         seats = new String[cinemaSpecs.numRowsTotal + 1][cinemaSpecs.numColsTotal + 1];
@@ -36,7 +38,7 @@ public class Cinema {
     }
 
     public static void inputCinema() {
-        System.out.println("Enter the number of rows: ");
+        System.out.println("\nEnter the number of rows: ");
         int rowsTotal = scanner.nextInt();
         System.out.println("Enter the number of seats in each row: ");
         int colsTotal = scanner.nextInt();
@@ -44,15 +46,43 @@ public class Cinema {
         int ticketCostBack = 8;
         int smallCinemaLimit = 60;
         cinemaSpecs = new CinemaSpecs(rowsTotal, colsTotal, ticketCostFront, ticketCostBack, smallCinemaLimit);
+        cinemaRoom();
     }
 
+    public static boolean seatCheck(int rowTicket, int cinemaRows, int colTicket, int cinemaCols) {
+        if (rowTicket < 1 || rowTicket > cinemaRows || colTicket < 1 || colTicket > cinemaCols) {
+            System.out.println("\nWrong input!");
+            return false;
+        }
+
+        if (seats[rowTicket][colTicket].equals("B")) {
+            System.out.println("\nThat ticket has already been purchased!");
+            return false;
+        }
+        return true;
+    }
+
+
     public static void inputTicket() {
-        System.out.println("Enter a row number: ");
+
+        System.out.println("\nEnter a row number: ");
         int rowNumberTicket = scanner.nextInt();
         System.out.println("Enter a seat number in that row: ");
         int colNumberTicket = scanner.nextInt();
+        boolean checkInput = seatCheck(rowNumberTicket, cinemaSpecs.numRowsTotal, colNumberTicket, cinemaSpecs.numColsTotal);
+        while (checkInput == false) {
+            System.out.println("\nEnter a row number: ");
+            rowNumberTicket = scanner.nextInt();
+            System.out.println("Enter a seat number in that row: ");
+            colNumberTicket = scanner.nextInt();
+            checkInput = seatCheck(rowNumberTicket, cinemaSpecs.numRowsTotal, colNumberTicket, cinemaSpecs.numColsTotal);
+        }
+
         cinemaTicket = new CinemaTicket(rowNumberTicket, colNumberTicket);
         System.out.println("Ticket price: $" + cinemaTicket.costTicket);
+        seats[cinemaTicket.rowNumberTicket][cinemaTicket.colNumberTicket] = "B";
+        purchasedTickets++;
+        incomeCurrent += cinemaTicket.costTicket;
     }
 
 
@@ -76,17 +106,48 @@ public class Cinema {
         return income;
     }
 
-    public static void occupiedSeat() {
-        seats[cinemaTicket.rowNumberTicket][cinemaTicket.colNumberTicket] = "B";
+    public static void statistics() {
+        System.out.println("\nNumber of purchased tickets: " + purchasedTickets);
+        System.out.printf("Percentage: %.2f%%", (double) purchasedTickets / (cinemaSpecs.numRowsTotal * cinemaSpecs.numColsTotal) * 100);
+        System.out.println("\nCurrent income: $" + incomeCurrent);
+        System.out.println("Total income: $" + income());
     }
+
+    public static int mainMenu() {
+
+        System.out.println("\n1. Show the seats");
+        System.out.println("2. Buy a ticket");
+        System.out.println("3. Statistics");
+        System.out.println("0. Exit");
+        return scanner.nextInt();
+    }
+
+
 
     public static void main(String[] args) {
         inputCinema();
-        cinemaPrint(cinemaRoom());
-        inputTicket();
-        occupiedSeat();
-        cinemaPrint(seats);
-
-        //System.out.printf("Total income:\n $%d \n", income());
+        int mainMenuStatus = -1;
+        while (mainMenuStatus != 0) {
+            switch (mainMenuStatus) {
+                case 0:
+                    System.exit(0);
+                case 1:
+                    cinemaPrint(seats);
+                    mainMenuStatus = mainMenu();
+                    break;
+                case 2:
+                    inputTicket();
+                    mainMenuStatus = mainMenu();
+                    break;
+                case 3:
+                    statistics();
+                    mainMenuStatus = mainMenu();
+                    break;
+                default:
+                    System.out.println("Command not recognized");
+                    mainMenuStatus = mainMenu();
+                    break;
+            }
+        }
     }
 }
